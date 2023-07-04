@@ -18,7 +18,24 @@ class Edificio(models.Model):
                 self.direccion,
                 self.ciudad,
                 self.tipo)
-
+    
+    def get_cuartos(self):
+        """
+        """
+        valor = 0
+        num_cuartos = self.numero_departamentos.all()
+        for l in num_cuartos:
+            valor = valor + l.numero_cuartos
+        return valor
+    #sum(lista)
+    def get_departamentos(self):
+        """
+        """
+        valor = 0
+        departamento = self.numero_departamentos.all()
+        return len(departamento)
+    #sum(lista)
+    
 class Departamento(models.Model):
     nombre_Propietario = models.CharField(max_length=100)
     costo = models.IntegerField()

@@ -26,13 +26,13 @@ tr:hover {
   background-color: #258EAD;
 }
 
-input[type=text], input[type=number|email] {
+input[type=text], input[type=number], input[type=email] {
   width: 25%;
   padding: 5px 5px;
   box-sizing: border-box;
 }
 
-input[type=text|number]:focus {
+input[type=text] input[type=number]:focus {
   border: 3px solid blue;
 }
 
@@ -66,7 +66,7 @@ label {
   list-style:none;
   float:left;
   padding: 5px;
-  width:95%;
+  width:100%;
 }
 
 .top_menu ul li

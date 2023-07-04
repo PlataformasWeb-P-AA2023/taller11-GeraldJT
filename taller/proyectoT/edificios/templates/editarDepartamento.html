@@ -1,15 +1,14 @@
 {% extends "master.html" %}
-
+{% block title %}
+  Editar departamento
+{% endblock %}
 {% block content %}
-
-<h2>Crear Número Telefónico</h3>
+<h2>Editar Departamento</h3>
 
 <form action="" method="post">
-
   {% csrf_token %}
-
   {{formulario.as_p}}
-
-  <p><input type='submit' value='Agregar'/></p>
+  <p><input type='submit' value='Actualizar'/></p>
 </form>
+
 {% endblock %}

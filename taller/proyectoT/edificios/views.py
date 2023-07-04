@@ -4,102 +4,117 @@ from django.template import RequestContext
 from django.shortcuts import render
 
 # importar las clases de models.py
-from ordenamiento.models import *
+from edificios.models import *
 
 # importar los formularios de forms.py
-from ordenamiento.forms import *
+from edificios.forms import *
 
 # Create your views here.
 
 def index(request):
-    
-    return render(request, 'index.html')
+
+    edificios = Edificio.objects.all()
+    departamentos = Departamento.objects.all()
+
+    informacion_template = {'edificio': edificios, 'numero_edificios': len(edificios), \
+                            'numero_departamentos': len(departamentos)}
+    return render(request, 'index.html', informacion_template)
 
 
-def mostrar_Parroquias_Barrios(request):
-    
-    parroquia = Parroquia.objects.all()
-    barrio = Barrio.objects.all()
-    informacion_template = {'parroquia': parroquia, 'numero_parroquia':len(parroquia), 'barrio': barrio}
-    return render(request, 'parroquia_barrio.html', informacion_template)
+def obtener_edificio(request, id):
+    """
+        Listar los registros del modelo Estudiante,
+        obtenidos de la base de datos.
+    """
+    # a través del ORM de django se obtiene
+    # los registros de la entidad; el listado obtenido
+    # se lo almacena en una variable llamada
+    # estudiantes
+    edificios = Edificio.objects.get(pk=id)
+    # en la variable tipo diccionario llamada informacion_template
+    # se agregará la información que estará disponible
+    # en el template
+    informacion_template = {'edificio': edificios}
+    return render(request, 'obtenerEdificio.html', informacion_template)
 
 
-def obtener_Barrios(request, id):
-    
-    parroquia = Parroquia.objects.get(pk=id)
-    barrio = Barrio.objects.filter(parroquia = id)
-    informacion_template = {'barrio': barrio, 'parroquia': parroquia}
-    return render(request, 'obtenerBarrios.html', informacion_template)
-
-def mostrar_Barrios(request):
-    
-    
-    barrio = Barrio.objects.all()
-    informacion_template = {'barrio': barrio}
-    return render(request, 'mostrarBarrios.html', informacion_template)
-
-
-def crear_parroquia(request):
+def crear_edificio(request):
     """
     """
     if request.method=='POST':
-        formulario = ParroquiaForm(request.POST)
+        formulario = EdificioForm(request.POST)
         print(formulario.errors)
         if formulario.is_valid():
             formulario.save() # se guarda en la base de datos
             return redirect(index)
     else:
-        formulario = ParroquiaForm()
+        formulario = EdificioForm()
     diccionario = {'formulario': formulario}
 
-    return render(request, 'crearParroquia.html', diccionario)
+    return render(request, 'crearEdificio.html', diccionario)
 
 
-def editar_parroquia(request, id):
+def editar_edificio(request, id):
     """
     """
-    parroquia = Parroquia.objects.get(pk=id)
+    edificio = Edificio.objects.get(pk=id)
     if request.method=='POST':
-        formulario = ParroquiaForm(request.POST, instance=parroquia)
+        formulario = EdificioForm(request.POST, instance=edificio)
         print(formulario.errors)
         if formulario.is_valid():
             formulario.save()
             return redirect(index)
     else:
-        formulario = ParroquiaForm(instance=parroquia)
+        formulario = EdificioForm(instance=edificio)
     diccionario = {'formulario': formulario}
 
-    return render(request, 'editarParroquia.html', diccionario)
+    return render(request, 'editarEdificio.html', diccionario)
 
 
-def editar_barrio(request, id):
+def eliminar_edificio(request, id):
     """
     """
-    barrio = Barrio.objects.get(pk=id)
+    edificio = Edificio.objects.get(pk=id)
+    edificio.delete()
+    return redirect(index)
+
+
+def crear_departamento(request):
+    """
+    """
+
     if request.method=='POST':
-        formulario = BarrioForm(request.POST, instance=barrio)
+        formulario = DepartamentoForm(request.POST)
         print(formulario.errors)
         if formulario.is_valid():
             formulario.save()
             return redirect(index)
     else:
-        formulario = BarrioForm(instance=barrio)
+        formulario = DepartamentoForm()
     diccionario = {'formulario': formulario}
 
-    return render(request, 'editarBarrio.html', diccionario)
+    return render(request, 'crearDepartamento.html', diccionario)
 
-def crear_barrio_parroquia(request, id):
+
+def editar_departamento(request, id):
     """
     """
-    parroquia = Parroquia.objects.get(pk=id)
+    departamento = Departamento.objects.get(pk=id)
     if request.method=='POST':
-        formulario = BarrioParroquiaForm(parroquia, request.POST)
+        formulario = DepartamentoForm(request.POST, instance=departamento)
         print(formulario.errors)
         if formulario.is_valid():
             formulario.save()
             return redirect(index)
     else:
-        formulario = BarrioParroquiaForm(parroquia)
-    diccionario = {'formulario': formulario, 'parroquia': parroquia }
+        formulario = DepartamentoForm(instance=departamento)
+    diccionario = {'formulario': formulario}
 
-    return render(request, 'crearBarrioParroquia.html', diccionario)
+    return render(request, 'editarDepartamento.html', diccionario)
+
+def eliminar_departamento(request, id):
+    """
+    """
+    departamento = Departamento.objects.get(pk=id)
+    departamento.delete()
+    return redirect(index)

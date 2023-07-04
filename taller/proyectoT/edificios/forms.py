@@ -31,7 +31,7 @@ class DepartamentoForm(ModelForm):
             'nombre_Propietario': _('Ingrese los nombres completos del propietario'),
             'costo': _('Ingrese el costo del departamento'),
             'numero_cuartos': _('Ingrese el numero de cuartos'),
-            'edificio': _('Ingrese el deficio al que pertenece'),
+            'edificio': _('Ingrese el edificio al que pertenece'),
         }
 
 
@@ -43,10 +43,17 @@ class DepartamentoForm(ModelForm):
         return valor
     
     def clean_numero_cuartos(self):
-        valor = self.cleaned_data['costo']
+        valor = self.cleaned_data['numero_cuartos']
 
-        if valor > 100000:
-            raise forms.ValidationError("El costo no puede ser mayor a 100 mil")
+        if valor == 0 or valor > 7:
+            raise forms.ValidationError("El numero de cuartos no puede ser 0 ni mayor a 7")
+        return valor
+    def clean_nombre (self):
+        valor = self.cleaned_data['nombre_Propietario']
+        num_palabras = len(valor.split())
+
+        if num_palabras < 3:
+            raise forms.ValidationError("El nombre del propietario debe tener 3 palabras")
         return valor
 
 
